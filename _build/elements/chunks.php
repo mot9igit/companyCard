@@ -1,12 +1,8 @@
 <?php
 
 return [
-    'tpl.companyCard.item' => [
-        'file' => 'item',
+    'tpl.companyCard.form' => [
+        'file' => 'form',
         'description' => '',
-    ],
-    'tpl.companyCard.office' => [
-        'file' => 'office',
-        'description' => '',
-    ],
+    ]
 ];

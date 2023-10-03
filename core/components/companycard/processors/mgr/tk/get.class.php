@@ -1,9 +1,9 @@
 <?php
 
-class companyCardOfficeItemGetProcessor extends modObjectGetProcessor
+class companyCardTkGetProcessor extends modObjectGetProcessor
 {
-    public $objectType = 'companyCardItem';
-    public $classKey = 'companyCardItem';
+    public $objectType = 'companyCardTk';
+    public $classKey = 'companyCardTk';
     public $languageTopics = ['companycard:default'];
     //public $permission = 'view';
 
@@ -25,4 +25,4 @@ class companyCardOfficeItemGetProcessor extends modObjectGetProcessor
 
 }
 
-return 'companyCardOfficeItemGetProcessor';
+return 'companyCardTkGetProcessor';

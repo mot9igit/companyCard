@@ -5,23 +5,34 @@ companyCard.grid.Items = function (config) {
     }
     Ext.applyIf(config, {
         url: companyCard.config.connector_url,
+        fields: this.getFields(config),
+        columns: this.getColumns(config),
+        tbar: this.getTopBar(config),
+        sm: new Ext.grid.CheckboxSelectionModel(),
         baseParams: {
-            action: 'companycard/processor',
-            method: 'item/getlist',
+            action: 'mgr/companycard/getlist'
         },
-        multi_select: true,
+        listeners: {
+            rowDblClick: function (grid, rowIndex, e) {
+                var row = grid.store.getAt(rowIndex);
+                this.updateItem(grid, e, row);
+            }
+        },
         viewConfig: {
             forceFit: true,
             enableRowBody: true,
             autoFill: true,
             showPreview: true,
             scrollOffset: 0,
-            getRowClass: function (rec, ri, p) {
+            getRowClass: function (rec) {
                 return !rec.data.active
-                    ? 'office-grid-row-disabled'
+                    ? 'companycard-grid-row-disabled'
                     : '';
             }
         },
+        paging: true,
+        remoteSort: true,
+        autoHeight: true,
     });
     companyCard.grid.Items.superclass.constructor.call(this, config);
 
@@ -32,8 +43,17 @@ companyCard.grid.Items = function (config) {
         }
     }, this);
 };
-Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
+Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
     windows: {},
+
+    getMenu: function (grid, rowIndex) {
+        var ids = this._getSelectedIds();
+
+        var row = grid.getStore().getAt(rowIndex);
+        var menu = companyCard.utils.getMenu(row.data['actions'], this, ids);
+
+        this.addContextMenuItem(menu);
+    },
 
     createItem: function (btn, e) {
         var w = MODx.load({
@@ -64,9 +84,8 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'companycard/processor',
-                method: 'item/get',
-                id: id,
+                action: 'mgr/companycard/get',
+                id: id
             },
             listeners: {
                 success: {
@@ -92,7 +111,7 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         });
     },
 
-    removeItem: function (act, btn, e) {
+    removeItem: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
@@ -106,13 +125,12 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
                 : _('companycard_item_remove_confirm'),
             url: this.config.url,
             params: {
-                action: 'companycard/processor',
-                method: 'item/remove',
+                action: 'mgr/item/remove',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
                 success: {
-                    fn: function (r) {
+                    fn: function () {
                         this.refresh();
                     }, scope: this
                 }
@@ -121,7 +139,7 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         return true;
     },
 
-    disableItem: function (act, btn, e) {
+    disableItem: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
@@ -129,8 +147,7 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'companycard/processor',
-                method: 'item/disable',
+                action: 'mgr/companycard/disable',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
@@ -143,7 +160,7 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         })
     },
 
-    enableItem: function (act, btn, e) {
+    enableItem: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
@@ -151,8 +168,7 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'companycard/processor',
-                method: 'item/enable',
+                action: 'mgr/item/enable',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
@@ -165,11 +181,11 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         })
     },
 
-    getFields: function (config) {
-        return ['id', 'name', 'description', 'active', 'actions'];
+    getFields: function () {
+        return ['id', 'name', 'contact_name', 'address_fact', 'address_ur','contact_email', 'contact_phone', 'company_type', 'tk', 'city','description', 'active', 'actions'];
     },
 
-    getColumns: function (config) {
+    getColumns: function () {
         return [{
             header: _('companycard_item_id'),
             dataIndex: 'id',
@@ -180,6 +196,21 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
             dataIndex: 'name',
             sortable: true,
             width: 200,
+        },{
+            header: _('companycard_item_contact_phone'),
+            dataIndex: 'contact_phone',
+            sortable: true,
+            width: 200,
+        },{
+            header: _('companycard_item_city'),
+            dataIndex: 'city',
+            sortable: true,
+            width: 200,
+        },{
+            header: _('companycard_item_tk'),
+            dataIndex: 'tk',
+            sortable: true,
+            width: 200,
         }, {
             header: _('companycard_item_description'),
             dataIndex: 'description',
@@ -188,35 +219,84 @@ Ext.extend(companyCard.grid.Items, OfficeExt.grid.Default, {
         }, {
             header: _('companycard_item_active'),
             dataIndex: 'active',
-            renderer: OfficeExt.utils.renderBoolean,
+            renderer: companyCard.utils.renderBoolean,
             sortable: true,
             width: 100,
         }, {
             header: _('companycard_grid_actions'),
             dataIndex: 'actions',
-            renderer: OfficeExt.utils.renderActions,
+            renderer: companyCard.utils.renderActions,
             sortable: false,
             width: 100,
             id: 'actions'
         }];
     },
 
-    getTopBar: function (config) {
+    getTopBar: function () {
         return [{
-            text: '<i class="fa fa-plus"></i>&nbsp;' + _('companycard_item_create'),
+            text: '<i class="icon icon-plus"></i>&nbsp;' + _('companycard_item_create'),
             handler: this.createItem,
             scope: this
-        }, '->', this.getSearchField()];
-    },
-
-    getListeners: function () {
-        return {
-            rowDblClick: function (grid, rowIndex, e) {
-                var row = grid.store.getAt(rowIndex);
-                this.updateItem(grid, e, row);
+        }, '->', {
+            xtype: 'companycard-field-search',
+            width: 250,
+            listeners: {
+                search: {
+                    fn: function (field) {
+                        this._doSearch(field);
+                    }, scope: this
+                },
+                clear: {
+                    fn: function (field) {
+                        field.setValue('');
+                        this._clearSearch();
+                    }, scope: this
+                },
             }
-        };
+        }];
     },
 
+    onClick: function (e) {
+        var elem = e.getTarget();
+        if (elem.nodeName == 'BUTTON') {
+            var row = this.getSelectionModel().getSelected();
+            if (typeof(row) != 'undefined') {
+                var action = elem.getAttribute('action');
+                if (action == 'showMenu') {
+                    var ri = this.getStore().find('id', row.id);
+                    return this._showMenu(this, ri, e);
+                }
+                else if (typeof this[action] === 'function') {
+                    this.menu.record = row.data;
+                    return this[action](this, e);
+                }
+            }
+        }
+        return this.processEvent('click', e);
+    },
+
+    _getSelectedIds: function () {
+        var ids = [];
+        var selected = this.getSelectionModel().getSelections();
+
+        for (var i in selected) {
+            if (!selected.hasOwnProperty(i)) {
+                continue;
+            }
+            ids.push(selected[i]['id']);
+        }
+
+        return ids;
+    },
+
+    _doSearch: function (tf) {
+        this.getStore().baseParams.query = tf.getValue();
+        this.getBottomToolbar().changePage(1);
+    },
+
+    _clearSearch: function () {
+        this.getStore().baseParams.query = '';
+        this.getBottomToolbar().changePage(1);
+    },
 });
 Ext.reg('companycard-grid-items', companyCard.grid.Items);

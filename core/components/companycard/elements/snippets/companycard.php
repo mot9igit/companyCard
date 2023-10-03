@@ -2,40 +2,50 @@
 /** @var modX $modx */
 /** @var array $scriptProperties */
 /** @var companyCard $companyCard */
-$companyCard = $modx->getService('companyCard', 'companyCard', MODX_CORE_PATH . 'components/companycard/model/', $scriptProperties);
+$corePath = $modx->getOption('companycard_core_path', array(), $modx->getOption('core_path') . 'components/companycard/');
+$companyCard = $modx->getService('companyCard', 'companyCard', $corePath . 'model/');
 if (!$companyCard) {
-    return 'Could not load companyCard class!';
+    return 'Could not load companycard class!';
 }
 
+$companyCard->initialize($modx->resource->get("context_key"));
+
+if (!$modx->loadClass('pdofetch', MODX_CORE_PATH . 'components/pdotools/model/pdotools/', false, true)) {
+    return 'Could not load pdoFetch class!';
+}
+$pdoFetch = new pdoFetch($modx, $scriptProperties);
+
 // Do your snippet code here. This demo grabs 5 items from our custom table.
-$tpl = $modx->getOption('tpl', $scriptProperties, 'Item');
-$sortby = $modx->getOption('sortby', $scriptProperties, 'name');
-$sortdir = $modx->getOption('sortbir', $scriptProperties, 'ASC');
-$limit = $modx->getOption('limit', $scriptProperties, 5);
-$outputSeparator = $modx->getOption('outputSeparator', $scriptProperties, "\n");
+$tpl = $modx->getOption('tpl', $scriptProperties, 'tpl.companyCard.form');
 $toPlaceholder = $modx->getOption('toPlaceholder', $scriptProperties, false);
 
 // Build query
 $c = $modx->newQuery('companyCardItem');
-$c->sortby($sortby, $sortdir);
-$c->where(['active' => 1]);
-$c->limit($limit);
-$items = $modx->getIterator('companyCardItem', $c);
+$c->where(['active' => 1, 'user_id' => $modx->user->get("id")]);
+$c->limit(1);
+$items = $modx->getCollection('companyCardItem', $c);
 
 // Iterate through items
 $list = [];
 /** @var companyCardItem $item */
 foreach ($items as $item) {
-    $list[] = $modx->getChunk($tpl, $item->toArray());
+    $i = $item->toArray();
+    $i["tks"] = array();
+    $items = $modx->getCollection('companyCardTk', array("active" => 1));
+    foreach($items as $item){
+        $i["tks"][] = $item->toArray();
+    }
+    $out = $pdoFetch->getChunk($tpl, $i);
 }
 
+
+
 // Output
-$output = implode($outputSeparator, $list);
 if (!empty($toPlaceholder)) {
     // If using a placeholder, output nothing and set output to specified placeholder
-    $modx->setPlaceholder($toPlaceholder, $output);
+    $modx->setPlaceholder($toPlaceholder, $out);
 
     return '';
 }
 // By default just return output
-return $output;
+return $out;

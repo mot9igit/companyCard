@@ -5,7 +5,57 @@
     <object class="companyCardItem" table="companycard_items" extends="xPDOSimpleObject">
         <field key="name" dbtype="varchar" precision="100" phptype="string" null="false" default=""/>
         <field key="description" dbtype="text" phptype="string" null="true" default=""/>
+        <field key="company_type" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="contact_name" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="contact_email" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="contact_phone" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="address_fact" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="address_ur" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="ur_name" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="worktime" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="ogrn" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="inn" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="kpp" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="bank_number" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="bank_knumber" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="bank_bik" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="bank_name" dbtype="varchar" precision="255" phptype="string" null="true" default=""/>
+        <field key="city" dbtype="varchar" precision="255" phptype="string" null="false" default=""/>
+        <field key="tk" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
+        <field key="user_id" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
         <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+        <field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
+        <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="updatedby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
+
+        <index alias="name" name="name" primary="false" unique="false" type="BTREE">
+            <column key="name" length="" collation="A" null="false"/>
+        </index>
+        <index alias="company_type" name="company_type" primary="false" unique="false" type="BTREE">
+            <column key="company_type" length="" collation="A" null="false"/>
+        </index>
+        <index alias="active" name="active" primary="false" unique="false" type="BTREE">
+            <column key="active" length="" collation="A" null="false"/>
+        </index>
+
+        <aggregate alias="CreatedUser" class="modUser" local="createdby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="CreatedUserProfile" class="modUserProfile" local="createdby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="UpdatedUser" class="modUser" local="updatedby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="UpdatedUserProfile" class="modUserProfile" local="updatedby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="User" class="modUser" local="user_id" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="UserProfile" class="modUserProfile" local="user_id" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="companyCardTk" class="companyCardTk" local="tk" foreign="id" cardinality="many" owner="foreign"/>
+    </object>
+
+    <object class="companyCardTk" table="companycard_tk" extends="xPDOSimpleObject">
+        <field key="name" dbtype="varchar" precision="100" phptype="string" null="false" default=""/>
+        <field key="description" dbtype="text" phptype="string" null="true" default=""/>
+        <field key="active" dbtype="tinyint" precision="1" phptype="boolean" null="true" default="1"/>
+        <field key="createdon" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="createdby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
+        <field key="updatedon" dbtype="datetime" phptype="datetime" null="true" />
+        <field key="updatedby" dbtype="int" precision="10" attributes="unsigned" phptype="integer" null="true" default="0"/>
 
         <index alias="name" name="name" primary="false" unique="false" type="BTREE">
             <column key="name" length="" collation="A" null="false"/>
@@ -13,6 +63,11 @@
         <index alias="active" name="active" primary="false" unique="false" type="BTREE">
             <column key="active" length="" collation="A" null="false"/>
         </index>
+
+        <aggregate alias="CreatedUser" class="modUser" local="createdby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="CreatedUserProfile" class="modUserProfile" local="createdby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="UpdatedUser" class="modUser" local="updatedby" foreign="id" cardinality="many" owner="foreign"/>
+        <aggregate alias="UpdatedUserProfile" class="modUserProfile" local="updatedby" foreign="id" cardinality="many" owner="foreign"/>
     </object>
 
 </model>

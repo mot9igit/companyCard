@@ -29,6 +29,16 @@ companyCard.panel.Home = function (config) {
                     xtype: 'companycard-grid-items',
                     cls: 'main-wrapper',
                 }]
+            },{
+                title: _('companycard_tks'),
+                layout: 'anchor',
+                items: [{
+                    html: _('companycard_intro_msg'),
+                    cls: 'panel-desc',
+                }, {
+                    xtype: 'companycard-grid-tks',
+                    cls: 'main-wrapper',
+                }]
             }]
         }]
     });

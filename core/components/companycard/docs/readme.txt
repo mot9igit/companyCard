@@ -1,7 +1,7 @@
 --------------------
 companyCard
 --------------------
-Author: John Doe <john@doe.com>
+Author: Petropavlovsky Artyom <info@dart.agency>
 --------------------
 
-A basic Extra for MODx Revolution.
+A extra for create CompanyCards.

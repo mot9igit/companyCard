@@ -1,11 +1,11 @@
 <?php
 
-class companyCardOfficeItemRemoveProcessor extends modObjectProcessor
+class companyCardTkDisableProcessor extends modObjectProcessor
 {
-    public $objectType = 'companyCardItem';
-    public $classKey = 'companyCardItem';
+    public $objectType = 'companyCardTk';
+    public $classKey = 'companyCardTk';
     public $languageTopics = ['companycard'];
-    //public $permission = 'remove';
+    //public $permission = 'save';
 
 
     /**
@@ -19,16 +19,17 @@ class companyCardOfficeItemRemoveProcessor extends modObjectProcessor
 
         $ids = $this->modx->fromJSON($this->getProperty('ids'));
         if (empty($ids)) {
-            return $this->failure($this->modx->lexicon('companycard_item_err_ns'));
+            return $this->failure($this->modx->lexicon('companycard_tk_err_ns'));
         }
 
         foreach ($ids as $id) {
             /** @var companyCardItem $object */
             if (!$object = $this->modx->getObject($this->classKey, $id)) {
-                return $this->failure($this->modx->lexicon('companycard_item_err_nf'));
+                return $this->failure($this->modx->lexicon('companycard_tk_err_nf'));
             }
 
-            $object->remove();
+            $object->set('active', false);
+            $object->save();
         }
 
         return $this->success();
@@ -36,4 +37,4 @@ class companyCardOfficeItemRemoveProcessor extends modObjectProcessor
 
 }
 
-return 'companyCardOfficeItemRemoveProcessor';
+return 'companyCardTkDisableProcessor';

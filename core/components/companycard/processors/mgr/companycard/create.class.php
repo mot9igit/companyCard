@@ -1,6 +1,6 @@
 <?php
 
-class companyCardOfficeItemCreateProcessor extends modObjectCreateProcessor
+class companyCardItemCreateProcessor extends modObjectCreateProcessor
 {
     public $objectType = 'companyCardItem';
     public $classKey = 'companyCardItem';
@@ -13,6 +13,7 @@ class companyCardOfficeItemCreateProcessor extends modObjectCreateProcessor
      */
     public function beforeSet()
     {
+        $this->modx->log(1, 1111);
         $name = trim($this->getProperty('name'));
         if (empty($name)) {
             $this->modx->error->addField('name', $this->modx->lexicon('companycard_item_err_name'));
@@ -25,4 +26,4 @@ class companyCardOfficeItemCreateProcessor extends modObjectCreateProcessor
 
 }
 
-return 'companyCardOfficeItemCreateProcessor';
+return 'companyCardItemCreateProcessor';

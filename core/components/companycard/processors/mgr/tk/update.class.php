@@ -1,16 +1,16 @@
 <?php
 
-class companyCardOfficeItemUpdateProcessor extends modObjectUpdateProcessor
+class companyCardTkUpdateProcessor extends modObjectUpdateProcessor
 {
-    public $objectType = 'companyCardItem';
-    public $classKey = 'companyCardItem';
+    public $objectType = 'companyCardTk';
+    public $classKey = 'companyCardTk';
     public $languageTopics = ['companycard'];
     //public $permission = 'save';
 
 
     /**
-     * We do a special check of permission
-     * because our objects is not an instances of modAccessibleObject
+     * We doing special check of permission
+     * because of our objects is not an instances of modAccessibleObject
      *
      * @return bool|string
      */
@@ -32,17 +32,17 @@ class companyCardOfficeItemUpdateProcessor extends modObjectUpdateProcessor
         $id = (int)$this->getProperty('id');
         $name = trim($this->getProperty('name'));
         if (empty($id)) {
-            return $this->modx->lexicon('companycard_item_err_ns');
+            return $this->modx->lexicon('companycard_tk_err_ns');
         }
 
         if (empty($name)) {
-            $this->modx->error->addField('name', $this->modx->lexicon('companycard_item_err_name'));
+            $this->modx->error->addField('name', $this->modx->lexicon('companycard_tk_err_name'));
         } elseif ($this->modx->getCount($this->classKey, ['name' => $name, 'id:!=' => $id])) {
-            $this->modx->error->addField('name', $this->modx->lexicon('companycard_item_err_ae'));
+            $this->modx->error->addField('name', $this->modx->lexicon('companycard_tk_err_ae'));
         }
 
         return parent::beforeSet();
     }
 }
 
-return 'companyCardOfficeItemUpdateProcessor';
+return 'companyCardTkUpdateProcessor';

@@ -1,7 +1,7 @@
-companyCard.grid.Items = function (config) {
+companyCard.grid.Tks = function (config) {
     config = config || {};
     if (!config.id) {
-        config.id = 'companycard-grid-items';
+        config.id = 'companycard-grid-tks';
     }
     Ext.applyIf(config, {
         url: companyCard.config.connector_url,
@@ -10,7 +10,7 @@ companyCard.grid.Items = function (config) {
         tbar: this.getTopBar(config),
         sm: new Ext.grid.CheckboxSelectionModel(),
         baseParams: {
-            action: 'mgr/item/getlist'
+            action: 'mgr/tk/getlist'
         },
         listeners: {
             rowDblClick: function (grid, rowIndex, e) {
@@ -34,7 +34,7 @@ companyCard.grid.Items = function (config) {
         remoteSort: true,
         autoHeight: true,
     });
-    companyCard.grid.Items.superclass.constructor.call(this, config);
+    companyCard.grid.Tks.superclass.constructor.call(this, config);
 
     // Clear selection on grid refresh
     this.store.on('load', function () {
@@ -43,7 +43,7 @@ companyCard.grid.Items = function (config) {
         }
     }, this);
 };
-Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
+Ext.extend(companyCard.grid.Tks, MODx.grid.Grid, {
     windows: {},
 
     getMenu: function (grid, rowIndex) {
@@ -55,9 +55,9 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         this.addContextMenuItem(menu);
     },
 
-    createItem: function (btn, e) {
+    createTk: function (btn, e) {
         var w = MODx.load({
-            xtype: 'companycard-item-window-create',
+            xtype: 'companycard-tk-window-create',
             id: Ext.id(),
             listeners: {
                 success: {
@@ -72,7 +72,7 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         w.show(e.target);
     },
 
-    updateItem: function (btn, e, row) {
+    updateTk: function (btn, e, row) {
         if (typeof(row) != 'undefined') {
             this.menu.record = row.data;
         }
@@ -84,14 +84,14 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'mgr/item/get',
+                action: 'mgr/tk/get',
                 id: id
             },
             listeners: {
                 success: {
                     fn: function (r) {
                         var w = MODx.load({
-                            xtype: 'companycard-item-window-update',
+                            xtype: 'companycard-tk-window-update',
                             id: Ext.id(),
                             record: r,
                             listeners: {
@@ -111,21 +111,21 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         });
     },
 
-    removeItem: function () {
+    removeTk: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
         }
         MODx.msg.confirm({
             title: ids.length > 1
-                ? _('companycard_items_remove')
-                : _('companycard_item_remove'),
+                ? _('companycard_tks_remove')
+                : _('companycard_tk_remove'),
             text: ids.length > 1
-                ? _('companycard_items_remove_confirm')
-                : _('companycard_item_remove_confirm'),
+                ? _('companycard_tks_remove_confirm')
+                : _('companycard_tk_remove_confirm'),
             url: this.config.url,
             params: {
-                action: 'mgr/item/remove',
+                action: 'mgr/tk/remove',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
@@ -139,7 +139,7 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         return true;
     },
 
-    disableItem: function () {
+    disableTk: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
@@ -147,7 +147,7 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'mgr/item/disable',
+                action: 'mgr/tk/disable',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
@@ -160,7 +160,7 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         })
     },
 
-    enableItem: function () {
+    enableTk: function () {
         var ids = this._getSelectedIds();
         if (!ids.length) {
             return false;
@@ -168,7 +168,7 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         MODx.Ajax.request({
             url: this.config.url,
             params: {
-                action: 'mgr/item/enable',
+                action: 'mgr/tk/enable',
                 ids: Ext.util.JSON.encode(ids),
             },
             listeners: {
@@ -182,27 +182,27 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
     },
 
     getFields: function () {
-        return ['id', 'name', 'description', 'active', 'actions'];
+        return ['id', 'name','description', 'active', 'actions'];
     },
 
     getColumns: function () {
         return [{
-            header: _('companycard_item_id'),
+            header: _('companycard_tk_id'),
             dataIndex: 'id',
             sortable: true,
             width: 70
         }, {
-            header: _('companycard_item_name'),
+            header: _('companycard_tk_name'),
             dataIndex: 'name',
             sortable: true,
             width: 200,
         }, {
-            header: _('companycard_item_description'),
+            header: _('companycard_tk_description'),
             dataIndex: 'description',
             sortable: false,
             width: 250,
         }, {
-            header: _('companycard_item_active'),
+            header: _('companycard_tk_active'),
             dataIndex: 'active',
             renderer: companyCard.utils.renderBoolean,
             sortable: true,
@@ -219,8 +219,8 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
 
     getTopBar: function () {
         return [{
-            text: '<i class="icon icon-plus"></i>&nbsp;' + _('companycard_item_create'),
-            handler: this.createItem,
+            text: '<i class="icon icon-plus"></i>&nbsp;' + _('companycard_tk_create'),
+            handler: this.createTk,
             scope: this
         }, '->', {
             xtype: 'companycard-field-search',
@@ -284,4 +284,4 @@ Ext.extend(companyCard.grid.Items, MODx.grid.Grid, {
         this.getBottomToolbar().changePage(1);
     },
 });
-Ext.reg('companycard-grid-items', companyCard.grid.Items);
+Ext.reg('companycard-grid-tks', companyCard.grid.Tks);

@@ -15,7 +15,8 @@ class companyCardHomeManagerController extends modExtraManagerController
      */
     public function initialize()
     {
-        $this->companyCard = $this->modx->getService('companyCard', 'companyCard', MODX_CORE_PATH . 'components/companycard/model/');
+        $corePath = $this->modx->getOption('companycard_core_path', array(), $this->modx->getOption('core_path') . 'components/companycard/');
+        $this->companyCard = $this->modx->getService('companyCard', 'companyCard', $corePath . 'model/');
         parent::initialize();
     }
 
@@ -56,8 +57,10 @@ class companyCardHomeManagerController extends modExtraManagerController
         $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/companycard.js');
         $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/misc/utils.js');
         $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/misc/combo.js');
-        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/items.grid.js');
-        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/items.windows.js');
+        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/cards.grid.js');
+        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/cards.windows.js');
+        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/tk.grid.js');
+        $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/tk.windows.js');
         $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/widgets/home.panel.js');
         $this->addJavascript($this->companyCard->config['jsUrl'] . 'mgr/sections/home.js');
 

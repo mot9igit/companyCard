@@ -1,9 +1,9 @@
 <?php
 
-class companyCardOfficeItemGetListProcessor extends modObjectGetListProcessor
+class companyCardTkGetListProcessor extends modObjectGetListProcessor
 {
-    public $objectType = 'companyCardItem';
-    public $classKey = 'companyCardItem';
+    public $objectType = 'companyCardTk';
+    public $classKey = 'companyCardTk';
     public $defaultSortField = 'id';
     public $defaultSortDirection = 'DESC';
     //public $permission = 'list';
@@ -57,10 +57,10 @@ class companyCardOfficeItemGetListProcessor extends modObjectGetListProcessor
         // Edit
         $array['actions'][] = [
             'cls' => '',
-            'icon' => 'fa fa-edit',
-            'title' => $this->modx->lexicon('companycard_item_update'),
+            'icon' => 'icon icon-edit',
+            'title' => $this->modx->lexicon('companycard_tk_update'),
             //'multiple' => $this->modx->lexicon('companycard_items_update'),
-            'action' => 'updateItem',
+            'action' => 'updateTk',
             'button' => true,
             'menu' => true,
         ];
@@ -68,20 +68,20 @@ class companyCardOfficeItemGetListProcessor extends modObjectGetListProcessor
         if (!$array['active']) {
             $array['actions'][] = [
                 'cls' => '',
-                'icon' => 'fa fa-power-off action-green',
-                'title' => $this->modx->lexicon('companycard_item_enable'),
-                'multiple' => $this->modx->lexicon('companycard_items_enable'),
-                'action' => 'enableItem',
+                'icon' => 'icon icon-power-off action-green',
+                'title' => $this->modx->lexicon('companycard_tk_enable'),
+                'multiple' => $this->modx->lexicon('companycard_tks_enable'),
+                'action' => 'enableTk',
                 'button' => true,
                 'menu' => true,
             ];
         } else {
             $array['actions'][] = [
                 'cls' => '',
-                'icon' => 'fa fa-power-off action-gray',
-                'title' => $this->modx->lexicon('companycard_item_disable'),
-                'multiple' => $this->modx->lexicon('companycard_items_disable'),
-                'action' => 'disableItem',
+                'icon' => 'icon icon-power-off action-gray',
+                'title' => $this->modx->lexicon('companycard_tk_disable'),
+                'multiple' => $this->modx->lexicon('companycard_tks_disable'),
+                'action' => 'disableTk',
                 'button' => true,
                 'menu' => true,
             ];
@@ -90,10 +90,10 @@ class companyCardOfficeItemGetListProcessor extends modObjectGetListProcessor
         // Remove
         $array['actions'][] = [
             'cls' => '',
-            'icon' => 'fa fa-trash-o action-red',
-            'title' => $this->modx->lexicon('companycard_item_remove'),
-            'multiple' => $this->modx->lexicon('companycard_items_remove'),
-            'action' => 'removeItem',
+            'icon' => 'icon icon-trash-o action-red',
+            'title' => $this->modx->lexicon('companycard_tk_remove'),
+            'multiple' => $this->modx->lexicon('companycard_tks_remove'),
+            'action' => 'removeTk',
             'button' => true,
             'menu' => true,
         ];
@@ -103,4 +103,4 @@ class companyCardOfficeItemGetListProcessor extends modObjectGetListProcessor
 
 }
 
-return 'companyCardOfficeItemGetListProcessor';
+return 'companyCardTkGetListProcessor';

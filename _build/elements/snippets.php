@@ -3,31 +3,11 @@
 return [
     'companyCard' => [
         'file' => 'companycard',
-        'description' => 'companyCard snippet to list items',
+        'description' => 'companyCard snippet to list form',
         'properties' => [
             'tpl' => [
                 'type' => 'textfield',
-                'value' => 'tpl.companyCard.item',
-            ],
-            'sortby' => [
-                'type' => 'textfield',
-                'value' => 'name',
-            ],
-            'sortdir' => [
-                'type' => 'list',
-                'options' => [
-                    ['text' => 'ASC', 'value' => 'ASC'],
-                    ['text' => 'DESC', 'value' => 'DESC'],
-                ],
-                'value' => 'ASC',
-            ],
-            'limit' => [
-                'type' => 'numberfield',
-                'value' => 10,
-            ],
-            'outputSeparator' => [
-                'type' => 'textfield',
-                'value' => "\n",
+                'value' => 'tpl.companyCard.form',
             ],
             'toPlaceholder' => [
                 'type' => 'combo-boolean',
